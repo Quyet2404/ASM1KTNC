@@ -1,0 +1,146 @@
+using NUnit.Framework;
+using System;
+
+namespace UnitTestExamples
+{
+    public class Calculator
+    {
+     
+        public int Multiply(int a, int b)
+        {
+            return a * b;
+        }
+
+    
+        public int Divide(int a, int b)
+        {
+            if (b == 0)
+                throw new DivideByZeroException("Không thể chia cho 0");
+            return a / b;
+        }
+
+  
+        public double Average(int[] numbers)
+        {
+            if (numbers.Length == 0)
+                throw new ArithmeticException("Danh sách rỗng");
+
+            double sum = 0;
+            foreach (var number in numbers)
+            {
+                sum += number;
+            }
+            return sum / numbers.Length;
+        }
+
+
+        public int GetElementAtIndex(int[] array, int index)
+        {
+            if (index < 0 || index >= array.Length)
+                throw new IndexOutOfRangeException("Chỉ số ngoài phạm vi");
+            return array[index];
+        }
+
+    
+        public string GetName(UserProfile profile)
+        {
+            if (profile == null)
+                throw new NullReferenceException("Đối tượng hồ sơ rỗng");
+
+            return profile.Name;
+        }
+
+ 
+        public int FindMin(int[] array)
+        {
+            if (array.Length == 0)
+                throw new InvalidOperationException("Mảng rỗng");
+
+            int min = array[0];
+            foreach (var item in array)
+            {
+                if (item < min)
+                    min = item;
+            }
+            return min;
+        }
+    }
+
+    public class UserProfile
+    {
+        public string Name { get; set; }
+    }
+
+    [TestFixture]
+    public class CalculatorTests
+    {
+        private Calculator calculator;
+
+        [SetUp]
+        public void Setup()
+        {
+            calculator = new Calculator();
+        }
+
+   
+        [Test]
+        public void Multiply_WithPositiveNumbers_ReturnsProduct()
+        {
+            Assert.AreEqual(20, calculator.Multiply(4, 5));
+        }
+
+        [Test]
+        public void Multiply_WithNegativeNumbers_ReturnsProduct()
+        {
+            Assert.AreEqual(-20, calculator.Multiply(-4, 5));
+        }
+
+        [Test]
+        public void Multiply_WithZero_ReturnsZero()
+        {
+            Assert.AreEqual(0, calculator.Multiply(0, 5));
+        }
+
+
+        [Test]
+        public void Divide_WithNonZeroDivider_ReturnsQuotient()
+        {
+            Assert.AreEqual(2, calculator.Divide(10, 5));
+        }
+
+        [Test]
+        public void Divide_ByZero_ThrowsDivideByZeroException()
+        {
+            Assert.Throws<DivideByZeroException>(() => calculator.Divide(10, 0));
+        }
+
+       
+        [Test]
+        public void Average_WithEmptyList_ThrowsArithmeticException()
+        {
+            Assert.Throws<ArithmeticException>(() => calculator.Average(new int[0]));
+        }
+
+        
+        [Test]
+        public void GetElementAtIndex_WithInvalidIndex_ThrowsIndexOutOfRangeException()
+        {
+            int[] array = { 1, 2, 3 };
+            Assert.Throws<IndexOutOfRangeException>(() => calculator.GetElementAtIndex(array, 5));
+        }
+
+        
+        [Test]
+        public void GetName_WithNullProfile_ThrowsNullReferenceException()
+        {
+            Assert.Throws<NullReferenceException>(() => calculator.GetName(null));
+        }
+
+       
+        [Test]
+        public void FindMin_WithEmptyArray_ThrowsInvalidOperationException()
+        {
+            Assert.Throws<InvalidOperationException>(() => calculator.FindMin(new int[0]));
+        }
+    }
+}
